@@ -6,22 +6,24 @@
     <Panel header="Formulário" :toggleable="true">
       <div class="p-fluid grid formgrid">
         <div class="field col-12 md:col-2">
-          <div>
-            <label for="basic">Nome de usuario</label>
+          
+          <span class="p-float-label">
+            <InputText id="nomedeUsuario" type="text" v-model="value1" />
+            <label for="nomedeUsuario">Nome de Usuario</label>
+          </span>
+          <!--<label for="basic">Nome de usuario</label>
             <InputMask mask="" v-model="val1" placeholder="Nome" />
-          </div>
+          </div>-->
           <br />
 
           <div>
-            <InputText id="genero" v-model="valueSexo" :options="generos" optionLabel="name" />
-            <label for="genero">Gênero</label>
-            <TreeSelect
-              v-model="selectedNodes"
-              :options="nodes"
-              selectionMode="multiple"
-              :metaKeySelection="false"
-              placeholder="Selecione"              
-            ></TreeSelect>
+            <!--<label for="genero">Gênero</label>-->
+            <Dropdown
+              v-model="selecioneGenero"
+              :options="opcaoGenero"
+              optionLabel="name"
+              placeholder="Select a City"
+            />
           </div>
           <br />
 
@@ -34,7 +36,7 @@
           <div>
             <label for="basic">Telefone</label>
             <InputMask
-              mask="99-999999"
+              mask="99-99999999"
               v-model="val1"
               placeholder="DDD (91)
           "
@@ -50,6 +52,7 @@
         </div>
       </div>
 
+      <Toast />
       <Button
         label="Finalizar Cadastro"
         class="p-button-success"
@@ -59,37 +62,35 @@
   </div>
 </template>
 
+
 <script>
 export default {
   data() {
     return {
-      cpf: '',
+      exibir: true,
+      cpf: "",
       dataNasc: null,
-      valueSexo: null,
-      generos: [
-        { name: "Masculino" },
-        { name: "Feminino" },
-        { name: "Outros" },
+      selecioneGenero: null,
+      opcaoGenero: [
+        { name: "MASCULINO" },
+        { name: "FEMININO" },
+        { name: "OUTROS" },
       ],
-    // data de nascimento
+      // data de nascimento
       value: null,
 
       //recebe o telefone
       val1: null,
-
-      selectedNodeKey: null,
-      nodes: null,
     };
-    
   },
-  
+
   methods: {
     show() {
-      //alert("exibir");
       this.$toast.add({
         severity: "success",
-        summary: "Alerta de Sucesso",
-        detail: "Cadastrado com Sucesso",
+        summary: "Success Message",
+        detail: "cadastrado com Sucesso",
+        life: 3000,
       });
     },
     showError() {
@@ -100,8 +101,6 @@ export default {
         detail: "Erro ao Cadastrar",
       });
     },
-
- 
   },
 };
 </script>

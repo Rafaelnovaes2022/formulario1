@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Toast/>
     <Formulario />
   </div>
 </template>
@@ -20,7 +21,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  
  
   background-image: no-repeat;
   bottom: 0;
@@ -28,6 +29,7 @@ export default {
   left: 0;
   overflow: auto;
   padding: 3em;
+  background-image: url("https://static.posters.cz/image/1300/plakaty/league-of-legends-champions-i102252.jpg");
   position: absolute;
   right: 0;
   text-align: center;
