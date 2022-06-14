@@ -22,6 +22,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   
+  
  
   background-image: no-repeat;
   bottom: 0;
@@ -29,7 +30,7 @@ export default {
   left: 0;
   overflow: auto;
   padding: 3em;
-  background-image: url("https://static.posters.cz/image/1300/plakaty/league-of-legends-champions-i102252.jpg");
+  background-image: url("https://www.blumenau.sc.gov.br/view/media/up/703141f558bcad050a3f13f791195ba1.png");
   position: absolute;
   right: 0;
   text-align: center;

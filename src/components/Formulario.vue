@@ -1,76 +1,119 @@
 <template>
+  <Dialog
+    v-model:visible="showMessage"
+    :breakpoints="{ '960px': '80vw' }"
+    :style="{ width: '30vw' }"
+    position="top"
+  >
+    <div class="flex align-items-center flex-column pt-6 px-3">
+      <i
+        class="pi pi-check-circle"
+        :style="{ fontSize: '5rem', color: 'var(--green-500)' }"
+      ></i>
+      <h5>Registration Successful!</h5>
+      <p :style="{ lineHeight: 1.5, textIndent: '1rem' }">
+        Your account is registered under name <b>{{ name }}</b> ; it'll be valid
+        next 30 days without activation. Please check <b>{{ email }}</b> for
+        activation instructions.
+      </p>
+    </div>
+    <template #footer>
+      <div class="flex justify-content-center">
+        <Button label="OK" @click="toggleDialog" class="p-button-text" />
+      </div>
+    </template>
+  </Dialog>
+
   <div>
     <h1>Formulario</h1>
   </div>
-  <div>
-    <Panel header="Formulário" :toggleable="true">
-      <div class="p-fluid grid formgrid">
-        <div class="field col-12 md:col-2">
-          
-          <span class="p-float-label">
-            <InputText id="nomedeUsuario" type="text" v-model="value1" />
-            <label for="nomedeUsuario">Nome de Usuario</label>
-          </span>
-          <!--<label for="basic">Nome de usuario</label>
+  <form @submit.prevent="handleSubmit(!v$.$invalid)" class="p-fluid">
+    <div>
+      <Panel header="Formulário" :toggleable="true">
+        <div class="p-fluid grid formgrid">
+          <div class="field col-12 md:col-2">
+            <span class="p-float-label">
+              <InputText id="nomedeUsuario" type="text" v-model="value1" />
+              <label for="nomedeUsuario">Nome de Usuario</label>
+            </span>
+            <!--<label for="basic">Nome de usuario</label>
             <InputMask mask="" v-model="val1" placeholder="Nome" />
           </div>-->
-          <br />
+            <br />
 
-          <div>
-            <!--<label for="genero">Gênero</label>-->
-            <Dropdown
-              v-model="selecioneGenero"
-              :options="opcaoGenero"
-              optionLabel="name"
-              placeholder="Select a City"
-            />
-          </div>
-          <br />
+            <div>
+              <!--<label for="genero">Gênero</label>-->
+              <Dropdown
+                v-model="selecioneGenero"
+                :options="opcaoGenero"
+                optionLabel="name"
+                placeholder="Selecione o Sexo"
+              />
+            </div>
+            <br />
 
-          <div>
-            <label for="ssn">CPF</label>
-            <InputMask mask="999-999-999-99" v-model="val2" placeholder="CPF" />
-          </div>
-          <br />
+            <div>
+              <label for="vcpf">CPF</label>
+              <InputMask
+                id="vcpf"
+                mask="999-999-999-99"
+                v-model="v$.cpf.$model"
+                :class="{ 'p-invalid': v$.cpf.$valid && submitted }"
+                placeholder="CPF"
+              />
+              <small class="p-error" v-if="v$.cpf.$invalid && submitted">Campo obrigatório</small>
+            </div>
+            <br />
 
-          <div>
-            <label for="basic">Telefone</label>
-            <InputMask
-              mask="99-99999999"
-              v-model="val1"
-              placeholder="DDD (91)
+            <div>
+              <label for="vtel">Telefone</label>
+              <InputMask
+                id="vtel"
+                mask="99-999999999"
+                v-model="vtel"
+                placeholder="DDD (91)
           "
-              :showIcon="true"
-            />
-          </div>
+                :showIcon="true"
+              />
+            </div>
 
-          <br />
-          <div>
-            <label for="date">Data de Nascimento</label>
-            <Calendar id="date" v-model="value" :showIcon="true" />
+            <br />
+            <div>
+              <label for="date">Data de Nascimento</label>
+              <Calendar id="date" v-model="value" :showIcon="true" />
+            </div>
           </div>
         </div>
-      </div>
 
-      <Toast />
-      <Button
+        <Toast />
+        <Button type="submit" label="Submit" class="mt-2" />
+
+        <!--  <Button
         label="Finalizar Cadastro"
         class="p-button-success"
-        @click="show"
-      />
-    </Panel>
-  </div>
+        @click="show(v$.$invalid)"
+      />-->
+      </Panel>
+    </div>
+  </form>
 </template>
 
 
 <script>
+import useVuelidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
+
 export default {
+  setup() {
+    return { v$: useVuelidate() };
+  },
   data() {
     return {
-      exibir: true,
-      cpf: "",
+      cpf: null,
       dataNasc: null,
+      vtel: null,
       selecioneGenero: null,
+      submitted: false,
       opcaoGenero: [
         { name: "MASCULINO" },
         { name: "FEMININO" },
@@ -78,35 +121,70 @@ export default {
       ],
       // data de nascimento
       value: null,
-
       //recebe o telefone
       val1: null,
+
+      showMessage: false,
     };
+  },
+  validations() {
+    return {
+      cpf: { required },
+    }; // Matches this.firstName
   },
 
   methods: {
-    show() {
-      this.$toast.add({
-        severity: "success",
-        summary: "Success Message",
-        detail: "cadastrado com Sucesso",
-        life: 3000,
-      });
+    show(isValid) {
+      this.buttonClicado = true;
+      if (!isValid) {
+        this.$toast.add({
+          severity: "success",
+          summary: "Success Message",
+          detail: "cadastrado com Sucesso",
+          life: 3000,
+        });
+      } else {
+        this.$toast.add({
+          severity: "error",
+          summary: "Alerta de Erro",
+          detail: "Erro ao Cadastrar",
+        });
+      }
     },
-    showError() {
-      //alert("exibir");
-      this.$toast.add({
-        severity: "error",
-        summary: "Alerta de Erro",
-        detail: "Erro ao Cadastrar",
-      });
+
+    handleSubmit(isFormValid) {
+      this.submitted = true;
+
+      if (!isFormValid) {
+        return;
+      }
+
+      this.toggleDialog();
+    },
+    toggleDialog() {
+      this.showMessage = !this.showMessage;
+
+      if (!this.showMessage) {
+        this.resetForm();
+      }
+    },
+
+    resetForm() {
+      this.val1 = null;
+      this.value = null;
+      this.cpf = null;
+      this.selecioneGenero = null;
+      this.value1 = null;
+      this.submitted = false;
     },
   },
 };
 </script>
 
 
-<style scss>
+
+
+<style scss scope>
 :root {
   --text-color: #495057;
   --text-color-secondary: #6c757d;
