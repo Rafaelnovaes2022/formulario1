@@ -12,9 +12,7 @@
       ></i>
       <h5>Registration Successful!</h5>
       <p :style="{ lineHeight: 1.5, textIndent: '1rem' }">
-        Your account is registered under name <b>{{ name }}</b> ; it'll be valid
-        next 30 days without activation. Please check <b>{{ email }}</b> for
-        activation instructions.
+        Sua conta foi registrada Com sucesso Seja Bem vindo ao Cadrasto Único!
       </p>
     </div>
     <template #footer>
@@ -25,7 +23,7 @@
   </Dialog>
 
   <div>
-    <h1>Formulario</h1>
+    <h1>Formulario Cadrasto unico</h1>
   </div>
   <form @submit.prevent="handleSubmit(!v$.$invalid)" class="p-fluid">
     <div>
@@ -44,11 +42,18 @@
             <div>
               <!--<label for="genero">Gênero</label>-->
               <Dropdown
-                v-model="selecioneGenero"
+                v-model="v$.selecioneGenero.$model"
                 :options="opcaoGenero"
                 optionLabel="name"
                 placeholder="Selecione o Sexo"
+                :class="{
+                  'p-invalid': v$.selecioneGenero.$invalid && submitted,
+                }"
+                optionValue="name"
               />
+              <small class="p-error" v-if="v$.selecioneGenero.$invalid && submitted"
+                >Campo obrigatório</small
+              >
             </div>
             <br />
 
@@ -58,10 +63,12 @@
                 id="vcpf"
                 mask="999-999-999-99"
                 v-model="v$.cpf.$model"
-                :class="{ 'p-invalid': v$.cpf.$valid && submitted }"
+                :class="{ 'p-invalid': v$.cpf.$invalid && submitted }"
                 placeholder="CPF"
               />
-              <small class="p-error" v-if="v$.cpf.$invalid && submitted">Campo obrigatório</small>
+              <small class="p-error" v-if="v$.cpf.$invalid && submitted"
+                >Campo obrigatório</small
+              >
             </div>
             <br />
 
@@ -86,7 +93,7 @@
         </div>
 
         <Toast />
-        <Button type="submit" label="Submit" class="mt-2" />
+        <Button type="submit" label="Finalizar Cadrasto" class="mt-2" />
 
         <!--  <Button
         label="Finalizar Cadastro"
@@ -122,7 +129,6 @@ export default {
       // data de nascimento
       value: null,
       //recebe o telefone
-      val1: null,
 
       showMessage: false,
     };
@@ -130,6 +136,7 @@ export default {
   validations() {
     return {
       cpf: { required },
+      selecioneGenero: { required },
     }; // Matches this.firstName
   },
 
@@ -170,7 +177,7 @@ export default {
     },
 
     resetForm() {
-      this.val1 = null;
+      this.vtel = null;
       this.value = null;
       this.cpf = null;
       this.selecioneGenero = null;
